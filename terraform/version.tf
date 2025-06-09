@@ -10,12 +10,16 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-west-2"
+  region  = var.region
   default_tags {
     tags = {
       owner="Abraham"
     }
   }
+}
+variable "region" {
+  description = "aws region"
+  default = "us-east-1"
 }
 
 
