@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.16"
+      version = "~> 5.95.0"  # CHANGÉ: de 4.16 vers 5.95.0 pour compatibilité EKS
     }
   }
 
@@ -10,16 +10,15 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.region
+  region = var.region
   default_tags {
     tags = {
-      owner="Abraham"
+      owner = "Abraham"
     }
   }
 }
+
 variable "region" {
   description = "aws region"
-  default = "us-east-1"
+  default     = "us-east-1"
 }
-
-
