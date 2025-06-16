@@ -30,12 +30,37 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           
-   
+      - name: Install Terraform manually
+        run: |
+          echo "Installing Terraform ${{ env.TF_VERSION }}..."
+          wget -q https://releases.hashicorp.com/terraform/${{ env.TF_VERSION }}/terraform_${{ env.TF_VERSION }}_linux_amd64.zip
+          unzip terraform_${{ env.TF_VERSION }}_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform version
+          echo "Terraform installation completed"
+          
+      - name: Verify Terraform installation
+        run: |
+          which terraform
+          terraform version
+          terraform -help
+        
+      - name: Terraform Format Check
+        working-directory: terraform
+        run: terraform fmt -check
+        continue-on-error: true
         
       - name: Terraform Init
         working-directory: terraform
-        run: terraform init
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Files in directory:"
+          ls -la
+          terraform init
         
+      - name: Terraform Validate
+        working-directory: terraform
+        run: terraform validate
         
       - name: Terraform Plan
         working-directory: terraform
