@@ -2,8 +2,15 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.95.0"  # CHANGÉ: de 4.16 vers 5.95.0 pour compatibilité EKS
+      version = "~> 5.95.0" # CHANGÉ: de 4.16 vers 5.95.0 pour compatibilité EKS
     }
+
+  }
+  backend "s3" {
+    bucket  = "course-project-terraform-state-dka"
+    encrypt = true
+    key     = "terraform/microservices-course-project/terraform.tfstate"
+    region  = "us-east-2"
   }
 
   required_version = ">= 1.2.0"
