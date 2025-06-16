@@ -12,7 +12,6 @@ on:
         default: apply
 
 env:
-  TF_VERSION: "1.7.4"
   AWS_REGION: "us-east-1"
 
 jobs:
@@ -30,25 +29,27 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           
-      - name: Install Terraform via apt
+      - name: Install Terraform via APT
         run: |
           echo "Installing Terraform via HashiCorp APT repository..."
           # Ajouter la clé GPG de HashiCorp
           wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
           # Ajouter le repository HashiCorp
           echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-          # Mettre à jour et installer terraform
+          # Mettre à jour la liste des packages
           sudo apt update
-          sudo apt install terraform=${{ env.TF_VERSION }}-* -y
+          # Installer terraform
+          sudo apt install terraform -y
           # Vérifier l'installation
           terraform version
           echo "Terraform installation completed via APT"
           
       - name: Verify Terraform installation
         run: |
+          echo "Terraform location:"
           which terraform
+          echo "Terraform version:"
           terraform version
-          terraform -help
         
       - name: Terraform Format Check
         working-directory: terraform
@@ -61,6 +62,7 @@ jobs:
           echo "Current directory: $(pwd)"
           echo "Files in directory:"
           ls -la
+          echo "Starting terraform init..."
           terraform init
         
       - name: Terraform Validate
