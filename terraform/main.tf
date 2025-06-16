@@ -68,7 +68,7 @@ module "vpc" {
     "kubernetes.io/role/internal-elb"             = "1"
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
-  
+
   # Tags généraux
   tags = {
     Environment = "development"
@@ -80,19 +80,19 @@ module "vpc" {
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.31"
-  
+
   cluster_name                             = local.cluster_name
   cluster_version                          = local.cluster_version
   cluster_endpoint_public_access           = local.enable_public_access
   enable_cluster_creator_admin_permissions = local.enable_cluster_creator
-  
+
   vpc_id                   = module.vpc.vpc_id
   subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.intra_subnets
 
   # Structure du node group avec nom cohérent
   eks_managed_node_groups = {
-    main = {  # COHÉRENT: nom simple et court
+    main = { # COHÉRENT: nom simple et court
       ami_type       = local.ami_types
       capacity_type  = local.capacity_type
       instance_types = local.instance_types
@@ -100,18 +100,18 @@ module "eks" {
       min_size     = local.node_min_size
       max_size     = local.node_max_size
       desired_size = local.node_desired_size
-      
+
       # Tags pour les instances
       launch_template_tags = {
-        Name        = "${local.cluster_name}-node"
+        Name = "${local.cluster_name}-node"
 
       }
-      
-    #   # Labels Kubernetes pour identifier les nœuds
-    #   labels = {
-    #     Environment = "development"
-    #     NodeGroup   = "main"
-    #   }
+
+      #   # Labels Kubernetes pour identifier les nœuds
+      #   labels = {
+      #     Environment = "development"
+      #     NodeGroup   = "main"
+      #   }
     }
   }
 }
