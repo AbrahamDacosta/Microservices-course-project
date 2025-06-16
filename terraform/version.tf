@@ -10,7 +10,7 @@ terraform {
     bucket  = "course-project-terraform-state-dka"
     encrypt = true
     key     = "terraform/microservices-course-project/terraform.tfstate"
-    region  = "us-east-2"
+    region  = "us-east-1"
   }
 
   required_version = ">= 1.2.0"
