@@ -1,0 +1,64 @@
+name: MICROSERVICE PROJECT COURSE EKS
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply_or_destroy:
+        type: choice
+        description: Run terraform apply or destroy
+        options:
+          - apply 
+          - destroy
+        default: apply
+      environment:
+        type: choice
+        description: Target environment
+        options:
+          - development
+          - staging
+          - production
+        default: development
+
+env:
+  TF_VERSION: "1.7.4"
+  AWS_REGION: "us-east-1"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+   
+        
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+   
+          
+      - name: Terraform Plan
+        working-directory: terraform
+        run: terraform plan -out=tfplan -var="environment=${{ github.event.inputs.environment }}"
+        
+     
+            
+      - name: Terraform Apply
+        if: ${{ github.event.inputs.apply_or_destroy == 'apply' }}
+        working-directory: terraform
+        run: terraform apply -auto-approve tfplan
+        
+      - name: Terraform Destroy
+        if: ${{ github.event.inputs.apply_or_destroy == 'destroy' }}
+        working-directory: terraform
+        run: terraform destroy -auto-approve -var="environment=${{ github.event.inputs.environment }}"
+        
+    
