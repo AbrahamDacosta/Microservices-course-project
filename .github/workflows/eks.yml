@@ -30,14 +30,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           
-      - name: Install Terraform manually
+      - name: Install Terraform via apt
         run: |
-          echo "Installing Terraform ${{ env.TF_VERSION }}..."
-          wget -q https://releases.hashicorp.com/terraform/${{ env.TF_VERSION }}/terraform_${{ env.TF_VERSION }}_linux_amd64.zip
-          unzip terraform_${{ env.TF_VERSION }}_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
+          echo "Installing Terraform via HashiCorp APT repository..."
+          # Ajouter la clé GPG de HashiCorp
+          wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          # Ajouter le repository HashiCorp
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          # Mettre à jour et installer terraform
+          sudo apt update
+          sudo apt install terraform=${{ env.TF_VERSION }}-* -y
+          # Vérifier l'installation
           terraform version
-          echo "Terraform installation completed"
+          echo "Terraform installation completed via APT"
           
       - name: Verify Terraform installation
         run: |
