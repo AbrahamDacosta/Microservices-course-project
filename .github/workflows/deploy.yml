@@ -1,15 +1,7 @@
-name: MICROSERVICE PROJECT COURSE EKS
+name: DEPLOY PROJECT COURSE EKS
 
 on:
   workflow_dispatch:
-    inputs:
-      apply_or_destroy:
-        type: choice
-        description: Run terraform apply or destroy
-        options:
-          - apply 
-          - destroy
-        default: apply
 
 env:
   AWS_REGION: "us-east-1"
@@ -44,11 +36,31 @@ jobs:
         run: terraform plan -out=tfplan
         
       - name: Terraform Apply
-        if: ${{ github.event.inputs.apply_or_destroy == 'apply' }}
         working-directory: terraform
         run: terraform apply -auto-approve tfplan
+      
+
+  microservice:
+    runs-on: ubuntu-latest
+    needs: terraform
+    steps:
+       - name: Checkout code
+         uses: actions/checkout@v4
         
-      - name: Terraform Destroy
-        if: ${{ github.event.inputs.apply_or_destroy == 'destroy' }}
-        working-directory: terraform
-        run: terraform destroy -auto-approve
+       - name: Configure AWS credentials
+         uses: aws-actions/configure-aws-credentials@v4
+         with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ env.AWS_REGION }}
+
+       - name: Connect to eks cluster
+         run: |
+           aws eks update-kubeconfig --region us-east-1 --name microservice-proj
+           
+
+       - name: Deploy Example Microservice
+         run: kubectl apply -f https://raw.githubusercontent.com/AbrahamDacosta/Microservices-course-project/refs/heads/eks/.github/workflows/eks.yml
+
+       - name:  Check Deployment Status
+         run: kubectl get all -o wide -A 
