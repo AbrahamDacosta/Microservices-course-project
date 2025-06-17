@@ -27,7 +27,7 @@ jobs:
       - name: Deleting Example Microservice
         run: kubectl delete -f https://raw.githubusercontent.com/AbrahamDacosta/Microservices-course-project/refs/heads/eks/.github/workflows/eks.yml
 
-      - name: Check Deployment Status
+      - name: Check Deployments Status
         run: kubectl get all -o wide -A
 
   terraform:
