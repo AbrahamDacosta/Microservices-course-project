@@ -60,7 +60,7 @@ jobs:
            
 
        - name: Deploy Example Microservice
-         run: kubectl apply -f https://raw.githubusercontent.com/AbrahamDacosta/Microservices-course-project/refs/heads/eks/.github/workflows/eks.yml
+         run: kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/refs/heads/main/release/kubernetes-manifests.yaml
 
        - name:  Check Deployments Status
          run: kubectl get all -o wide -A 
