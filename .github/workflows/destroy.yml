@@ -25,7 +25,7 @@ jobs:
           aws eks update-kubeconfig --region us-east-1 --name microservice-proj
 
       - name: Deleting Example Microservice
-        run: kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/refs/heads/main/release/kubernetes-manifests.yaml
+        run: kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/refs/heads/main/release/kubernetes-manifests.yaml --ignore-not-found=true
 
       - name: Check Deployments Status
         run: kubectl get all -o wide -A
