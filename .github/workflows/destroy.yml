@@ -59,4 +59,4 @@ jobs:
         
       - name: Terraform Destroy
         working-directory: terraform
-        run: terraform destroy -auto-approve tfplan
+        run: terraform destroy -auto-approve 
