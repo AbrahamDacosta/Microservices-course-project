@@ -1,5 +1,5 @@
 locals {
-  cluster_name  = "course-project"
+  cluster_name  = "microservice-proj"
   namespace     = "default"
   chart_name    = "kube-promotheus-stack"
   chart_repo    = "https://github.com/prometheus-community/helm-charts"
