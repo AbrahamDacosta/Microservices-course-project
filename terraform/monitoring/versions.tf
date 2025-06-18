@@ -6,8 +6,8 @@ terraform {
     }
 
     helm = {
-      source  = "harshicop/helm"
-      version = "3.0.0"
+      source  = "hashicorp/helm"
+      version = "2.12"
     }
 
   }
