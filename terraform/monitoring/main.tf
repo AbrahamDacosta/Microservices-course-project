@@ -7,7 +7,7 @@ locals {
   name          = "monitoring"
 }
 
-resource "helm-release" "monitoring" {
+resource "helm_release" "monitoring" {
   chart     = local.chart_name
   name      = local.name
   namespace = local.namespace
