@@ -1,7 +1,7 @@
 locals {
   cluster_name  = "microservice-proj"
   namespace     = "default"
-  chart_name    = "kube-promotheus-stack"
+  chart_name    = "kube-prometheus-stack"
   chart_repo    = "https://github.com/prometheus-community/helm-charts"
   chart_version = "75.3.0"
   name          = "monitoring"
