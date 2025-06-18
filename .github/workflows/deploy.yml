@@ -113,4 +113,4 @@ jobs:
           aws eks update-kubeconfig --region us-east-1 --name microservice-proj
 
       - name: Check vulnerabilities
-        run: trivy k8s --report=all all --severity=CRITICAL
+        run: trivy k8s --report=all --severity=CRITICAL cluster
